@@ -53,7 +53,7 @@ async function issues(db,d,{approval=false}={}){
 const source8='https://www.privacy.org.nz/privacy-principles/8/';
 const source9='https://www.privacy.org.nz/privacy-principles/9/';
 export async function run(db,cmd,args=[],o={}){
- if(!usage[cmd])throw Error(`Unknown command ${cmd}; run help`);
+ if(!Object.hasOwn(usage,cmd))throw Error(`Unknown command ${cmd}; run help`);
  const allowed={help:[],datasets:[],'add-dataset':['name'],types:['dataset'],'set-type':['dataset','name','rules','actor'],list:['dataset','type'],show:[],'content-week':[],attention:[],'review-queue':[],references:[],compliance:[],insights:[],add:['dataset','data','owner','due','actor'],revise:['data','actor','note'],assign:['owner','due','review-due','actor'],classify:['privacy','purpose','retention','actor'],verify:['evidence','actor'],approve:['decision','evidence','actor'],archive:['note','actor'],history:[],import:['dataset','owner','actor','dry-run'],imports:[],export:['out','format','dataset'],bundle:['dataset','name','actor'],bundles:[],'draft-brief':[],'weekly-review':[]};
  for(const k of Object.keys(o))if(k!=='json'&&!allowed[cmd].includes(k))throw Error(`Unknown option --${k} for ${cmd}`);
  for(const k of ['json','dry-run'])if(k in o&&o[k]!==true)throw Error(`--${k} is a boolean flag without a value`);
@@ -137,5 +137,5 @@ export async function run(db,cmd,args=[],o={}){
  if(cmd==='weekly-review'){const sections=[];for(const c of ['content-week','attention','compliance'])sections.push({title:c,html:table(await run(db,c))});return {file:writeOut('drafts',`weekly-${today()}`,page({title:'Monday content review',sections})),sent:false};}
 }
 
-export function parseArgs(argv){const args=[],o={};for(const a of argv){if(!a.startsWith('--'))args.push(a);else{const i=a.indexOf('=');const k=a.slice(2,i<0?undefined:i);if(Object.hasOwn(o,k))throw Error(`Duplicate option --${k}`);o[k]=i<0?true:a.slice(i+1);}}return {cmd:args.shift()||'help',args,o};}
+export function parseArgs(argv){const args=[],o=Object.create(null);for(const a of argv){if(!a.startsWith('--'))args.push(a);else{const i=a.indexOf('=');const k=a.slice(2,i<0?undefined:i);if(Object.hasOwn(o,k))throw Error(`Duplicate option --${k}`);o[k]=i<0?true:a.slice(i+1);}}return {cmd:args.shift()||'help',args,o};}
 if(process.argv[1]&&import.meta.url===pathToFileURL(path.resolve(process.argv[1])).href){let db;try{const {cmd,args,o}=parseArgs(process.argv.slice(2));db=await getDb();const result=await run(db,cmd,args,o);if(o.json)console.log(JSON.stringify(result,null,2));else if(Array.isArray(result))printTable(result);else console.log(JSON.stringify(result,null,2));}catch(e){console.error(e.message);process.exitCode=1;}finally{if(db)await db.close();}}

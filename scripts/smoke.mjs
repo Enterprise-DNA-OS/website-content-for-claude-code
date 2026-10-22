@@ -78,6 +78,7 @@ try{
  const backup=await call('export',[],{out:path.join(temp,'all.json')});const records=JSON.parse(fs.readFileSync(backup.file)).records;assert.equal(records.bundles.length,1);assert(records.revisions.length>8);await assert.rejects(()=>call('export',[],{out:backup.file}),/EEXIST/);
  // SQL constraints and RLS prevent accidental access through an untrusted database role.
  await db.exec('create role content_reader');await db.exec('grant usage on schema public to content_reader');await db.exec('grant select on documents,datasets,content_week to content_reader');await db.exec('set role content_reader');assert.equal((await db.query('select * from documents')).length,0);assert.equal((await db.query('select * from content_week')).length,0);await db.exec('reset role');
+ await assert.rejects(()=>run(db,'toString'),/Unknown command/);
  assert.deepEqual([...seen].sort(),Object.keys(usage).sort());await db.close();db=null;
  for(const script of ['view','docs']){const out=spawnSync(process.execPath,[`scripts/${script}.mjs`],{cwd:REPO_ROOT,env:process.env,encoding:'utf8'});assert.equal(out.status,0,out.stderr);}
  assert.equal(fs.readdirSync(path.join(temp,'views')).length,3);assert(fs.readdirSync(path.join(temp,'docs-out')).includes('delivery-manifest'));
