@@ -1,11 +1,50 @@
 [
   {
-    "name": "example",
-    "title": "TODO(author): the first document this industry must produce",
-    "for_each": "select gen_random_uuid() as id, 'Example' as name",
+    "name": "content-brief",
+    "title": "Content review brief",
+    "for_each": "select id,name from documents where not archived",
     "file": "name",
     "sections": [
-      { "title": "Details", "sql": "select 'replace me' as item, $1::text as record_id" }
+      {
+        "title": "Working content",
+        "sql": "select name,source_id,type_name,variant,owner,due,review_due,payload from documents where id=$1"
+      },
+      {
+        "title": "Revision record",
+        "sql": "select revision,actor,note,created_at from revisions where document_id=$1 order by revision"
+      },
+      {
+        "title": "Review evidence",
+        "sql": "select revision,decision,actor,evidence,created_at from approvals where document_id=$1 order by created_at"
+      }
+    ]
+  },
+  {
+    "name": "retention-review",
+    "title": "Personal content retention review",
+    "for_each": "select id,name from documents where privacy='personal'",
+    "file": "name",
+    "sections": [
+      {
+        "title": "Purpose and review decision",
+        "sql": "select name,owner,purpose,retention_due,accuracy_evidence,archived from documents where id=$1"
+      }
+    ]
+  },
+  {
+    "name": "delivery-manifest",
+    "title": "Website delivery manifest",
+    "for_each": "select id,name from bundles",
+    "file": "name",
+    "sections": [
+      {
+        "title": "Local bundle, not deployed",
+        "sql": "select name,sha256,actor,created_at from bundles where id=$1"
+      },
+      {
+        "title": "Included documents",
+        "sql": "select x->>'id' document_id,x->>'revision' revision,x->'document'->>'_id' source_id,x->'document'->>'_type' content_type from bundles,jsonb_array_elements(snapshot) x where id=$1"
+      }
     ]
   }
 ]

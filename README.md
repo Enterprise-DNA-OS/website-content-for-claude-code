@@ -1,115 +1,108 @@
-<h1 align="center">Website Content for Claude Code</h1>
+# Website Content for Claude Code
 
-<p align="center">
-  <strong>The open-source website content desk that is just a database and Claude Code.</strong>
-</p>
+Your pages, biographies and campaign copy in a database you own. Built by Enterprise DNA.
 
-<p align="center">
-  Created by <a href="https://www.enterprisedna.co"><strong>Enterprise DNA</strong></a>. Free and open source. Works with Claude Code, Codex, OpenCode or Cursor.
-</p>
+| Do it yourself | We customise it | We run it for you |
+|---|---|---|
+| Free MIT code. Install and operate it yourself. | Your content types, review rules and existing website connection. | Installed and operated through Omni by Enterprise DNA. |
+| [Quick start](#quick-start) | A setup fee, then a retainer. [Build our version](https://enterprisedna.co/omni/book?offer=replace-software&utm_campaign=sanity) | One setup fee, then a retainer. [Talk to Sam](https://enterprisedna.co/omni/book?offer=replace-software&utm_campaign=sanity) |
 
-<!-- three-doors -->
-<table align="center">
-  <tr>
-    <td align="center"><strong>Do it yourself</strong><br/>Clone it, run it, own it. Free, MIT.<br/><a href="#quick-start">Quick start</a></td>
-    <td align="center"><strong>We customise it</strong><br/>Your fields, your rules, your Sanity data brought across.<br/><a href="https://enterprisedna.co/omni/book/?utm_source=github&utm_medium=readme&utm_campaign=sanity">Book a call</a></td>
-    <td align="center"><strong>We run it for you</strong><br/>Installed, connected and operated inside Omni. Setup fee, then a retainer.<br/><a href="https://enterprisedna.co/omni/instead-of/sanity?utm_source=github&utm_medium=readme&utm_campaign=sanity">How it works</a></td>
-  </tr>
-</table>
+## The bill this replaces
 
-<p align="center">
-  <a href="#what-is-this">What is this</a> &bull;
-  <a href="#why-no-front-end">Why no front end</a> &bull;
-  <a href="#quick-start">Quick start</a> &bull;
-  <a href="#the-commands">Commands</a> &bull;
-  <a href="#instead-of-sanity">Instead of Sanity</a> &bull;
-  <a href="#want-it-installed-and-run-for-you">Installed for you</a> &bull;
-  <a href="#license">License</a>
-</p>
+Sanity Growth includes two datasets. Its [published pricing](https://www.sanity.io/pricing), checked 22 October 2026, lists extra datasets at US$999 per dataset per month, up to two extras. One extra costs US$11,988 over twelve months, before seats and other charges. That is a configuration price, not a customer invoice. A team using Sanity's free tier or only the included datasets has a different bill.
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Node-20+-339933?style=flat-square" alt="Node 20+" />
-  <img src="https://img.shields.io/badge/PostgreSQL-any-336791?style=flat-square" alt="PostgreSQL" />
-  <img src="https://img.shields.io/badge/PGlite-embedded-3ecf8e?style=flat-square" alt="PGlite" />
-  <img src="https://img.shields.io/badge/License-MIT-yellow?style=flat-square" alt="MIT License" />
-</p>
-
----
-
-## What is this
-
-Website Content for Claude Code does the job you pay Sanity for, as a Postgres database and a set of agent commands. There is no web front end. You open the folder in [Claude Code](https://claude.com/claude-code) (or Codex, OpenCode, Cursor: see `AGENTS.md`) and ask for what you want in plain language. It runs the right query, and it can answer questions the Sanity dashboard cannot.
-
-<!-- TODO(author): the annual bill. One sentence: what a 10 to 50 person business typically pays Sanity per year, all in, with a source. -->
-
-Want the same thing with a web front end, or built on a different stack? That is a customisation, and it is exactly what Enterprise DNA does: [book a call](https://enterprisedna.co/omni/book/?utm_source=github&utm_medium=readme&utm_campaign=sanity).
-
-<!-- TODO(author): two or three sentences on what this specific product covers and who it is for. -->
-
-## Why no front end
-
-- The front end was only ever there because the database was hard to talk to. That is no longer true.
-- Your data sits in plain Postgres tables you own. Any tool can read them. No export, no lock-in.
-- No seats, no tiers, no add-ons. Read [docs/why-no-front-end.md](docs/why-no-front-end.md) for the honest trade-offs too.
+This base handles structured website content operated by an editor through Claude Code, Codex, OpenCode or Cursor. Content records, draft variants, references, field rules, review evidence and local delivery snapshots live together. It does not serve a website or reproduce Sanity Studio. Enterprise DNA adapts the existing site's delivery, access and editing experience in the custom version.
 
 ## Quick start
 
-Sixty seconds, no database install (an embedded Postgres runs inside Node):
+Node 20 or later. The embedded Postgres engine needs no database server.
 
 ```bash
 git clone https://github.com/Enterprise-DNA-OS/website-content-for-claude-code.git
 cd website-content-for-claude-code
 npm install
+npm test
 npm run demo
+npm run view
+npm run docs
+node scripts/content.mjs help
 ```
 
-Then open the folder in Claude Code and type a slash command. <!-- TODO(author): name the first command to try. -->
+The fictional Harbour website has an overdue services page, an expired campaign review, a broken reference, missing content and a biography awaiting a retention decision. Dates are relative to the first seed run. Seed is idempotent and refuses remote databases.
 
-### Use it with your own Postgres or Supabase
+For an empty business database, run npm run migrate without seed. Set DATA_DIR for a separate embedded database or DATABASE_URL for a dedicated Postgres database. TLS certificates are verified for remote connections. Run as a trusted database owner on a protected machine. RLS denies untrusted roles; no web authentication or shared-user permission model is installed.
 
-Copy `.env.example` to `.env`, set `DATABASE_URL`, then `npm run migrate`. Same commands, shared data, no per-seat fee.
+## Weekly work
 
-## The commands
+28 CLI commands and 30 agent recipes, with human-readable results or --json. Exact names ignore case and unique ID prefixes work. Ambiguity lists matches and exits 1. Read [the complete command guide](docs/cli.md).
 
-<!-- TODO(author): a table of the slash commands in .claude/commands and what each one does. -->
+- /content-week lists the copy due and the next review date.
+- /review-queue shows current and superseded decisions.
+- /references finds broken links between content records.
+- /attention identifies overdue work and missing evidence.
+- /weekly-review writes the Monday brief from the plan, attention and compliance reports.
+- /draft-brief prepares one content review packet without sending it.
 
-| Command | What it does |
-|---|---|
-| `/...` | ... |
+Add and revise arbitrary JSON documents. Define required top-level field names and types. Assign owners and dates, classify personal information and record accuracy evidence. A different editor label approves the current revision. Changing content or its rules invalidates the approval. Actor labels are operator-entered, not authenticated identities.
 
-## Instead of sanity
+## Bring your Sanity history
 
-<!-- TODO(author): how to bring data across from Sanity; link docs/replace-sanity.md -->
+Export the dataset from Sanity and extract data.ndjson. Then run one import command:
 
-## Architecture
-
-```
-website-content-for-claude-code/
-  CLAUDE.md                 how the operator wants this run (routing table + house rules)
-  AGENTS.md                 the same, for Codex / OpenCode / Cursor / Gemini CLI
-  .claude/commands/         the slash commands
-  scripts/                  the CLI the commands drive
-  scripts/lib/db.mjs        one adapter: DATABASE_URL (pg) or embedded PGlite
-  supabase/migrations/      plain SQL schema
-  supabase/seed.sql         demo data
-  docs/                     the thesis and the migration guide
+```bash
+node scripts/content.mjs add-dataset --name="Main website"
+node scripts/content.mjs import sanity imports/data.ndjson --dataset="Main website" --owner="Content lead" --actor="Migration operator" --dry-run
+node scripts/content.mjs import sanity imports/data.ndjson --dataset="Main website" --owner="Content lead" --actor="Migration operator"
 ```
 
-## Built for coding agents
+The imported payload retains its IDs, types, rich text, nested fields, source timestamps and references. Drafts, release variants and asset metadata stay separate. Unchanged imports are idempotent. Conflicts abort the whole import without overwriting local edits. Binary assets, source permissions, Studio code and historical revisions are separate migration work. [Exact export steps and mapping](docs/replace-sanity.md).
 
-The database, CLI and command recipes work with Claude Code, Codex, OpenCode or Cursor. Ask your coding agent for a new command and have it implement and test the change against the same records.
+## Ten questions across your content
 
-## Contributing
+insights answers all ten from today's database. These are useful combinations of your own content and review rules, not a claim that Sanity cannot be configured to answer them.
 
-Issues and pull requests are welcome. Keep the shape: plain SQL, a small CLI, a slash command per recurring job, no front end.
+1. Which overdue items still lack a current approval?
+2. Which content contains broken references?
+3. Which personal records have expired retention decisions?
+4. Which documents are missing required fields?
+5. Which approved records became stale after edits or rule changes?
+6. Which drafts are overdue?
+7. Which owners have work due this week?
+8. Which imports still need classification?
+9. Which personal documents lack accuracy evidence?
+10. Which content depends on another dataset?
 
-## Want it installed and run for you?
+## Review and handover
 
-Enterprise DNA installs Website Content for Claude Code for your business, migrates your Sanity data, connects it to the rest of your tools, and runs it for you as part of **Omni**, our managed Command Center. One setup fee, then a monthly retainer.
+bundle checks every active content and asset record in the selected dataset. Field rules, classification, a current review date and independent approval must pass. Personal information also needs purpose, retention review and accuracy evidence. All referenced records, even weak references, must be in the bundle. Cross-dataset references require explicit mapping. Draft, scheduled-release and system variants never enter the bundle.
 
-- Book a call: [enterprisedna.co/omni/book](https://enterprisedna.co/omni/book/?offer=replace-software&utm_source=github&utm_medium=readme&utm_campaign=sanity)
-- Read more: [enterprisedna.co/omni/instead-of/sanity](https://enterprisedna.co/omni/instead-of/sanity?utm_source=github&utm_medium=readme&utm_campaign=sanity)
+A passing bundle saves a versioned snapshot, its SHA-256 hash and a local JSON file. Nothing deploys or sends. Keep draft-only work under drafts.* IDs or in a separate dataset until it is ready. Revision and approval evidence is append-only through the application and database triggers. A database owner remains trusted and can change those controls. These are operational checks, not a compliance certificate or regulated audit trail.
 
-## License
+## Documents and views
 
-MIT. Copyright (c) 2026 Enterprise DNA.
+brand.json controls the business name, logo and colours. npm run docs renders content briefs, personal-content retention reviews and delivery manifests as printable HTML. npm run view renders three read-only dashboards: the content week, attention and review desk. /new-view adds another question. JSON content is escaped in HTML. The existing website needs an adapter for its content shapes and assets before using a bundle.
+
+## Your first hour: ten things to ask for
+
+1. Put our business name and colours on the reports.
+2. Show the overdue fictional services page.
+3. Show what stops the campaign being ready.
+4. Add a dataset for our website.
+5. Preview our Sanity export without changing records.
+6. Compare the imported IDs and document counts with the source.
+7. Define the fields every service page needs.
+8. Add our reviewers and review dates.
+9. Prepare a content brief and inspect it.
+10. Add our own field and weekly view through /customise.
+
+## Operation
+
+Use a protected machine and a dedicated database. Imported text is data, never instructions. No automatic links are fetched and no imported code runs. Source access controls do not carry over. Dataset names organise content; they are not tenant boundaries. Use separate databases for separate clients. Keep raw exports, database files, drafts and reports private and out of git.
+
+export produces either all records and evidence as JSON or original Sanity document payloads as NDJSON. These are portability exports. Tested native database backups are the recovery mechanism. Archived content remains in history and exports; the operator must apply a retention and disposal process to copies and backups.
+
+npm test checks all commands, import rollback and idempotence, payload roundtrip, stale approvals, broken references, bundle blocking, immutable evidence, RLS, HTML escaping and CLI exit codes. CI declares Windows and Linux on Node 20 and 22. A local Linux pass does not claim Windows or remote Postgres execution.
+
+[Compliance rules](docs/compliance.md). [Why no front end](docs/why-no-front-end.md).
+
+MIT. Sanity is its owner's trademark. This independent project is not affiliated with Sanity.

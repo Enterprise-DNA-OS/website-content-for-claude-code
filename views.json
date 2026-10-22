@@ -1,13 +1,31 @@
 [
   {
     "name": "week",
-    "title": "This week",
-    "subtitle": "Website Content for Claude Code: what needs attention, rendered by npm run view",
+    "title": "Website content week",
     "sections": [
       {
-        "title": "Needs attention",
-        "note": "TODO(author): point this at the industry's attention view (overdue, stuck, quiet).",
-        "sql": "select 'replace me' as item, 'TODO(author)' as why"
+        "title": "Content plan",
+        "sql": "select name,dataset,type_name,variant,owner,due,review_due from content_week order by due nulls last,name"
+      }
+    ]
+  },
+  {
+    "name": "attention",
+    "title": "Content needing attention",
+    "sections": [
+      {
+        "title": "Overdue and missing evidence",
+        "sql": "select name,owner,issue from attention order by name,issue"
+      }
+    ]
+  },
+  {
+    "name": "reviews",
+    "title": "Content review desk",
+    "sections": [
+      {
+        "title": "Decisions and stale approvals",
+        "sql": "select name,dataset,owner,revision,decision,current_review,reviewer,review_due from review_queue order by name"
       }
     ]
   }

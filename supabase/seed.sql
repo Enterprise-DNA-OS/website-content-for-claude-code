@@ -1,0 +1,11 @@
+insert into datasets(id,name) values('10000000-0000-4000-8000-000000000001','Harbour website') on conflict do nothing;
+insert into content_types(id,dataset_id,name,rules) values
+ ('20000000-0000-4000-8000-000000000001','10000000-0000-4000-8000-000000000001','page','{"title":{"type":"string","required":true},"body":{"type":"string","required":true}}'),
+ ('20000000-0000-4000-8000-000000000002','10000000-0000-4000-8000-000000000001','profile','{"title":{"type":"string","required":true}}') on conflict do nothing;
+insert into documents(id,dataset_id,source_id,name,type_name,variant,payload,owner,due,review_due,privacy,purpose,retention_due,last_actor) values
+ ('30000000-0000-4000-8000-000000000001','10000000-0000-4000-8000-000000000001','services','Services overview','page','content','{"_id":"services","_type":"page","title":"Services overview","body":"Fictional workshop services for coastal businesses."}','Aroha Chen',current_date-4,current_date+30,'business',null,null,'Demo editor'),
+ ('30000000-0000-4000-8000-000000000002','10000000-0000-4000-8000-000000000001','drafts.spring','Spring campaign','page','draft','{"_id":"drafts.spring","_type":"page","title":"Spring campaign","body":"Draft campaign copy.","contact":{"_ref":"missing-person"}}','Mia Wilson',current_date+3,current_date-2,'unclassified',null,null,'Demo editor'),
+ ('30000000-0000-4000-8000-000000000003','10000000-0000-4000-8000-000000000001','team-aroha','Team biography','profile','content','{"_id":"team-aroha","_type":"profile","title":"Team biography","bio":"Fictional team member."}','Aroha Chen',current_date-1,current_date+10,'personal','Website team biography',current_date-2,'Demo editor'),
+ ('30000000-0000-4000-8000-000000000004','10000000-0000-4000-8000-000000000001','contact','Contact page','page','content','{"_id":"contact","_type":"page","title":"Contact page"}','Mia Wilson',current_date+5,current_date+30,'business',null,null,'Demo editor') on conflict do nothing;
+insert into revisions(document_id,revision,snapshot,actor,note) select id,revision,to_jsonb(d),'Demo editor','Initial fictional content' from documents d on conflict do nothing;
+insert into content_links(document_id,target_source_id,field_path) select '30000000-0000-4000-8000-000000000002','missing-person','$.contact' where not exists(select 1 from content_links);
